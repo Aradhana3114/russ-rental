@@ -3,6 +3,12 @@ set -e
 
 echo "Starting Russ Rental Laravel Application..."
 
+# Create .env file if it doesn't exist (Railway uses environment variables)
+if [ ! -f .env ]; then
+    echo "Creating .env file from environment variables..."
+    cp .env.example .env 2>/dev/null || echo "APP_NAME=Laravel" > .env
+fi
+
 # Wait for database if needed
 if [ ! -z "$DB_HOST" ]; then
     echo "Waiting for database connection..."
@@ -10,7 +16,7 @@ if [ ! -z "$DB_HOST" ]; then
 fi
 
 # Generate APP_KEY if not set
-if [ -z "$APP_KEY" ]; then
+if [ -z "$APP_KEY" ] || ! grep -q "APP_KEY=base64:" .env; then
     echo "APP_KEY not set, generating..."
     php artisan key:generate --force
 fi
