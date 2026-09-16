@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libicu-dev \
     nodejs \
     npm \
     && docker-php-ext-install \
@@ -16,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     pcntl \
     bcmath \
     gd \
+    intl \
     zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
