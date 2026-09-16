@@ -1,6 +1,16 @@
-# CRITICAL: Add these variables in Railway Dashboard
+# ✅ DEPLOYMENT SUCCESSFUL! Next Steps:
 
-## Required Environment Variables (Missing):
+## 🚀 Add This Variable for Auto-Migration:
+
+Copy this to Railway Dashboard → russ-rental → Variables:
+
+```
+AUTO_MIGRATE=true
+```
+
+This will automatically run database migrations on every deployment.
+
+## ✅ Variables Already Set (Confirmed Working):
 
 ```
 APP_KEY=base64:R6p3AnY3nZAazKUWNHALM6YUzJOrg/XeL4URaH27tMI=
@@ -11,12 +21,6 @@ APP_LOCALE=id
 APP_FALLBACK_LOCALE=en
 LOG_CHANNEL=stack
 LOG_LEVEL=error
-```
-
-## Optional (for auto-migration on deploy):
-
-```
-AUTO_MIGRATE=true
 ```
 
 ## Database Variables:
