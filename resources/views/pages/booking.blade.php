@@ -6,9 +6,9 @@
 
 <section class="bg-cream py-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span class="text-[11px] uppercase tracking-wide bg-white text-brand px-3 py-1.5 rounded-full border border-brand/20">Booking Armada</span>
-        <h1 class="font-serif text-4xl mt-5 text-brand-dark">Ajukan Booking Mobil</h1>
-        <p class="mt-4 text-brand-dark/60 max-w-2xl mx-auto">Pilih mobil, tentukan tanggal sewa, dan lengkapi data Anda. Tim Russ Rental akan menghubungi Anda melalui WhatsApp untuk konfirmasi ketersediaan dan detail pembayaran.</p>
+        <span class="text-[11px] uppercase tracking-wide bg-white text-brand px-3 py-1.5 rounded-full border border-brand/20">Booking Mobil</span>
+        <h1 class="font-serif text-4xl mt-5 text-brand-dark">Pesan Mobil Sekarang</h1>
+        <p class="mt-4 text-brand-dark/60 max-w-2xl mx-auto">Pilih mobil yang Anda inginkan, tentukan tanggal sewa, dan lengkapi data Anda. Tim kami akan segera menghubungi Anda via WhatsApp untuk konfirmasi.</p>
     </div>
 </section>
 
@@ -29,7 +29,7 @@
                     <label class="text-sm font-medium text-brand-dark">Pilih Mobil</label>
                     <select name="mobil_id" x-model="selectedId" @change="updatePreview()"
                             class="mt-1 w-full rounded-xl border border-brand/20 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 bg-white">
-                        <option value="">-- Pilih armada --</option>
+                        <option value="">-- Pilih mobil --</option>
                         @foreach($mobils as $mobil)
                             <option value="{{ $mobil->id }}"
                                 data-nama="{{ $mobil->nama }}"
@@ -49,7 +49,7 @@
                     <div class="px-4 py-3 flex items-center justify-between">
                         <div>
                             <p class="text-sm font-semibold text-brand-dark" x-text="previewNama"></p>
-                            <p class="text-xs text-brand-dark/60">Kapasitas penumpang & fitur terbaik di kelasnya</p>
+                            <p class="text-xs text-brand-dark/60">Mobil berkualitas dan terawat</p>
                         </div>
                         <p class="text-sm font-bold text-brand" x-text="previewHarga"></p>
                     </div>
@@ -58,7 +58,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="text-sm font-medium text-brand-dark">Nama Lengkap</label>
-                        <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Nama sesuai KTP"
+                        <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Nama lengkap Anda"
                                class="mt-1 w-full rounded-xl border border-brand/20 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 bg-white">
                         @error('nama') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
@@ -87,20 +87,20 @@
 
                 <div>
                     <label class="text-sm font-medium text-brand-dark">Catatan (opsional)</label>
-                    <textarea name="catatan" rows="4" placeholder="Lokasi penjemputan, kebutuhan supir, atau permintaan khusus lainnya..."
+                    <textarea name="catatan" rows="4" placeholder="Lokasi penjemputan atau permintaan khusus lainnya..."
                               class="mt-1 w-full rounded-xl border border-brand/20 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 bg-white">{{ old('catatan') }}</textarea>
                     @error('catatan') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <button type="submit" class="w-full px-6 py-3 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-dark transition-colors">
-                    Ajukan Booking →
+                    Kirim Booking →
                 </button>
             </form>
         </div>
 
         <div class="mt-8 bg-cream rounded-2xl border border-brand/10 p-6 text-center">
-            <h2 class="font-serif text-lg text-brand-dark mb-3">Butuh Bantuan Cepat?</h2>
-            <p class="text-sm text-brand-dark/60 mb-5">Tim concierge kami siap membantu Anda memilih armada yang sesuai kebutuhan perjalanan.</p>
+            <h2 class="font-serif text-lg text-brand-dark mb-3">Butuh Bantuan?</h2>
+            <p class="text-sm text-brand-dark/60 mb-5">Tim kami siap membantu Anda memilih mobil yang sesuai dengan kebutuhan Anda.</p>
             <div class="flex flex-col sm:flex-row gap-3 justify-center">
                 <a :href="waUrl" target="_blank"
                    class="inline-flex justify-center items-center px-6 py-3 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-dark">
@@ -125,7 +125,7 @@ function bookingForm() {
         get waUrl() {
             const nama = this.previewNama || 'mobil'
             const tgl = document.querySelector('input[name="tanggal_mulai"]')?.value || 'tanggal yang diinginkan'
-            const pesan = `Halo Kak, Saya tertarik untuk rental mobil ${nama}.\n\nApakah mobilnya masih tersedia untuk tanggal ${tgl}?\nMohon info harga dan ketentuan sewanya ya. Terima kasih.`
+            const pesan = `Halo, saya tertarik untuk rental mobil ${nama}.\n\nApakah mobilnya masih tersedia untuk tanggal ${tgl}?\nMohon info harga dan ketentuannya. Terima kasih.`
             return 'https://wa.me/6285186669860?text=' + encodeURIComponent(pesan)
         },
         init() {

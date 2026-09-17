@@ -16,7 +16,9 @@ class PageController extends Controller
             ->take(8)
             ->get();
 
-        return view('pages.home', compact('mobils'));
+        $unitCount = Mobil::count();
+
+        return view('pages.home', compact('mobils', 'unitCount'));
     }
 
     public function about()
@@ -48,7 +50,11 @@ class PageController extends Controller
             ->groupBy('tipe_kendaraan')
             ->pluck('jumlah', 'tipe_kendaraan');
 
-        return view('pages.services', compact('mobils', 'kategoriList'));
+        $tersediaHariIni = Mobil::all()->filter(function($mobil) {
+            return $mobil->unit_tersedia > 0;
+        })->count();
+
+        return view('pages.services', compact('mobils', 'kategoriList', 'tersediaHariIni'));
     }
 
     public function team()
@@ -61,5 +67,20 @@ class PageController extends Controller
     public function contact()
     {
         return view('pages.contact');
+    }
+
+    public function privacy()
+    {
+        return view('pages.privacy');
+    }
+
+    public function terms()
+    {
+        return view('pages.terms');
+    }
+
+    public function insurance()
+    {
+        return view('pages.insurance');
     }
 }

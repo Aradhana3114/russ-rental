@@ -23,3 +23,7 @@ Route::post('/booking', [BookingController::class, 'store'])->name('booking.stor
 
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+Route::get('/kebijakan-privasi', [PageController::class, 'privacy'])->name('privacy');
+Route::get('/ketentuan-sewa', [PageController::class, 'terms'])->name('terms');
+Route::get('/asuransi', [PageController::class, 'insurance'])->name('insurance');
