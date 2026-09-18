@@ -7,58 +7,57 @@
 @section('content')
 
 <!-- HERO -->
-<section class="relative -mt-20 pt-20 pb-16 flex items-center" style="min-height: calc(90vh + 5rem);">
-    <!-- Foto background hero — extend ke atas menutupi area navbar -->
-    <div class="absolute -top-20 left-0 right-0 bottom-0 overflow-hidden">
-        <img src="{{ asset('images/hero.jpg') }}"
-             alt="Russ Rental — Mobil Berkualitas"
-             class="w-full h-full object-cover object-center">
-        <!-- Overlay gelap supaya teks tetap terbaca -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
-    </div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-
-        <div class="relative z-10 max-w-2xl">
-            <div class="flex flex-wrap gap-2 mb-6">
-                <span class="text-[11px] tracking-wide uppercase bg-white/10 text-white/80 px-3 py-1.5 rounded-full backdrop-blur-sm">Rental Mobil Terpercaya</span>
-            </div>
-
-            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight text-white mb-2">
-                Rental Mobil Berkualitas
-            </h1>
-            <p class="font-serif text-2xl sm:text-3xl lg:text-4xl italic text-brand-light">
-                dengan Harga Terjangkau
-            </p>
-
-            <p class="mt-6 text-white/80 text-base sm:text-lg max-w-xl leading-relaxed">
-                Pilihan mobil berkualitas dengan proses booking yang mudah di Jakarta, Bali, dan sekitarnya.
-            </p>
-
-            <div class="mt-8 flex flex-wrap gap-3">
-                <a href="{{ route('booking') }}" class="px-7 py-3.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-light transition-colors shadow-lg">
-                    Booking Sekarang
-                </a>
-                <a href="{{ route('services') }}" class="px-7 py-3.5 rounded-full border-2 border-white/40 text-white text-sm font-semibold hover:bg-white/10 transition-colors backdrop-blur-sm">
-                    Lihat Daftar Mobil →
-                </a>
-            </div>
-
-            <div class="mt-12 grid grid-cols-2 gap-6 text-white/80 text-sm">
-                <div>
-                    <p class="text-white font-semibold text-lg">Antar Jemput</p>
-                    <p class="text-white/60 text-sm mt-1">Layanan Antar Jemput</p>
+<section class="relative bg-white min-h-screen pt-4 pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <!-- Kiri: Teks -->
+            <div class="pt-8 lg:pt-16">
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="text-[11px] tracking-wide uppercase bg-brand/10 text-brand px-3 py-1.5 rounded-full font-semibold">Rental Mobil Terpercaya</span>
                 </div>
-                <div>
-                    <p class="text-white font-semibold text-lg">{{ $unitCount }}+ Unit</p>
-                    <p class="text-white/60 text-sm mt-1">Mobil Siap Pakai</p>
+
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight text-brand-dark mb-2">
+                    Rental Mobil Berkualitas
+                </h1>
+                <p class="font-serif text-2xl sm:text-3xl lg:text-4xl italic text-brand-light">
+                    dengan Harga Terjangkau
+                </p>
+
+                <p class="mt-6 text-brand-dark/60 text-base sm:text-lg max-w-xl leading-relaxed">
+                    Pilihan mobil berkualitas dengan proses booking yang mudah di Jakarta, Bali, dan sekitarnya.
+                </p>
+
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="{{ route('booking') }}" class="px-7 py-3.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-light transition-colors shadow-lg">
+                        Booking Sekarang
+                    </a>
+                    <a href="{{ route('services') }}" class="px-7 py-3.5 rounded-full border-2 border-brand text-brand text-sm font-semibold hover:bg-brand hover:text-white transition-colors">
+                        Lihat Daftar Mobil →
+                    </a>
+                </div>
+
+                <div class="mt-12 grid grid-cols-2 gap-6 text-sm">
+                    <div>
+                        <p class="text-brand-dark font-semibold text-lg">Antar Jemput</p>
+                        <p class="text-brand-dark/60 text-sm mt-1">Layanan Antar Jemput</p>
+                    </div>
+                    <div>
+                        <p class="text-brand-dark font-semibold text-lg">{{ $unitCount }}+ Unit</p>
+                        <p class="text-brand-dark/60 text-sm mt-1">Mobil Siap Pakai</p>
+                    </div>
                 </div>
             </div>
+
+            <!-- Kanan: Gambar Mobil -->
+            @if($mobils->isNotEmpty())
+            <div class="hidden lg:flex items-center justify-center">
+                <img src="{{ $mobils->first()->gambar ? asset('storage/'.$mobils->first()->gambar) : 'https://placehold.co/600x400?text='.urlencode($mobils->first()->nama) }}"
+                     alt="{{ $mobils->first()->nama }}"
+                     class="w-full max-w-md object-contain drop-shadow-2xl">
+            </div>
+            @endif
         </div>
-
     </div>
-
-
 </section>
 
 <!-- HALLMARK -->
