@@ -61,6 +61,6 @@ class BookingController extends Controller
             'status' => 'dikonfirmasi',
         ]));
 
-        return back()->with('success', 'Terima Kasih! Telah Boking di RUSS RENTAL, Admin RUSS akan menghubungin anda melalu WhatsApp anda');
+        return back()->with('success', 'Terima Kasih! Telah boking di RUSS rental, Admin RUSS akan menghubungin anda melalui WhatsApp anda');
     }
 }

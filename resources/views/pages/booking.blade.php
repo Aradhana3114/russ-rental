@@ -25,34 +25,23 @@
             <form method="POST" action="{{ route('booking.store') }}" class="space-y-5" x-data="bookingForm()">
                 @csrf
 
+                <div x-show="previewGambar" x-transition class="rounded-xl overflow-hidden border border-brand/10 bg-white">
+                    <img :src="previewGambar" :alt="previewNama" class="w-full h-56 sm:h-64 object-contain">
+                </div>
+
                 <div>
                     <label class="text-sm font-medium text-brand-dark">Pilih Mobil</label>
-                    <select name="mobil_id" x-model="selectedId" @change="updatePreview()"
+                    <select name="mobil_id" x-model="selectedId"
                             class="mt-1 w-full rounded-xl border border-brand/20 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 bg-white">
                         <option value="">-- Pilih mobil --</option>
                         @foreach($mobils as $mobil)
                             <option value="{{ $mobil->id }}"
-                                data-nama="{{ $mobil->nama }}"
-                                data-harga="{{ number_format($mobil->harga_per_hari, 0, ',', '.') }}"
-                                data-gambar="{{ $mobil->gambar ? asset('storage/'.$mobil->gambar) : '' }}"
-                                data-placeholder="https://placehold.co/600x400?text={{ urlencode($mobil->nama) }}"
                                 {{ (old('mobil_id') == $mobil->id) || (!old('mobil_id') && $selectedMobil && $selectedMobil->id === $mobil->id) ? 'selected' : '' }}>
                                 {{ $mobil->nama }} — Rp {{ number_format($mobil->harga_per_hari, 0, ',', '.') }}/hari
                             </option>
                         @endforeach
                     </select>
                     @error('mobil_id') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-                </div>
-
-                <div x-show="previewGambar" x-transition class="rounded-xl overflow-hidden border border-brand/10 bg-white">
-                    <img :src="previewGambar" :alt="previewNama" class="w-full h-56 sm:h-64 object-cover">
-                    <div class="px-4 py-3 flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-semibold text-brand-dark" x-text="previewNama"></p>
-                            <p class="text-xs text-brand-dark/60">Mobil berkualitas dan terawat</p>
-                        </div>
-                        <p class="text-sm font-bold text-brand" x-text="previewHarga"></p>
-                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -116,34 +105,37 @@
 </section>
 
 <script>
+@php
+    $daftarMobil = $mobils->mapWithKeys(fn ($m) => [(string) $m->id => [
+        'nama' => $m->nama,
+        'harga' => number_format($m->harga_per_hari, 0, ',', '.'),
+        'gambar' => $m->gambar ? asset('storage/'.$m->gambar) : 'https://placehold.co/600x400?text='.urlencode($m->nama),
+    ]]);
+@endphp
 function bookingForm() {
+    const daftarMobil = @json($daftarMobil);
+
     return {
-        selectedId: '{{ old("mobil_id", $selectedMobil ? $selectedMobil->id : "") }}',
+        selectedId: @js((string) old('mobil_id', $selectedMobil?->id ?? '')),
         previewGambar: '',
         previewNama: '',
         previewHarga: '',
+        init() {
+            const apply = () => {
+                const m = daftarMobil[String(this.selectedId)]
+                this.previewGambar = m ? m.gambar : ''
+                this.previewNama = m ? m.nama : ''
+                this.previewHarga = m ? 'Rp ' + m.harga + '/hari' : ''
+            }
+            apply()
+            this.$watch('selectedId', apply)
+        },
         get waUrl() {
             const nama = this.previewNama || 'mobil'
             const tgl = document.querySelector('input[name="tanggal_mulai"]')?.value || 'tanggal yang diinginkan'
             const pesan = `Halo, saya tertarik untuk rental mobil ${nama}.\n\nApakah mobilnya masih tersedia untuk tanggal ${tgl}?\nMohon info harga dan ketentuannya. Terima kasih.`
             return 'https://wa.me/6285186669860?text=' + encodeURIComponent(pesan)
         },
-        init() {
-            this.$nextTick(() => this.updatePreview())
-        },
-        updatePreview() {
-            const select = this.$el.querySelector('select[name="mobil_id"]')
-            const option = select.options[select.selectedIndex]
-            if (this.selectedId && option.value) {
-                this.previewGambar = option.dataset.gambar || option.dataset.placeholder
-                this.previewNama = option.dataset.nama || ''
-                this.previewHarga = 'Rp ' + (option.dataset.harga || '') + '/hari'
-            } else {
-                this.previewGambar = ''
-                this.previewNama = ''
-                this.previewHarga = ''
-            }
-        }
     }
 }
 </script>

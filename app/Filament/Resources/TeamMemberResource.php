@@ -33,7 +33,7 @@ class TeamMemberResource extends Resource
                     Forms\Components\TextInput::make('jabatan')->required()->maxLength(150)->columnSpan(2),
                     Forms\Components\Textarea::make('deskripsi')->rows(4)->columnSpan(2),
                     Forms\Components\TextInput::make('urutan')->numeric()->default(0)->label('Urutan Tampil'),
-                    Forms\Components\FileUpload::make('foto')->image()->directory('team')->imageEditor()->columnSpan(2),
+                    Forms\Components\FileUpload::make('foto')->image()->disk('public')->directory('team')->imageEditor()->columnSpan(2),
                 ]),
         ]);
     }
@@ -43,7 +43,7 @@ class TeamMemberResource extends Resource
         return $table
             ->defaultSort('urutan')
             ->columns([
-                Tables\Columns\ImageColumn::make('foto')->circular(),
+                Tables\Columns\ImageColumn::make('foto')->disk('public')->circular(),
                 Tables\Columns\TextColumn::make('nama')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('jabatan')->searchable(),
                 Tables\Columns\TextColumn::make('urutan')->sortable(),

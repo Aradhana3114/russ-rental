@@ -120,6 +120,7 @@ class MobilResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('gambar')
                     ->label('Foto')
+                    ->disk('public')
                     ->square(),
 
                 Tables\Columns\TextColumn::make('nama')
