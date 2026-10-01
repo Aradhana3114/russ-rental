@@ -7,55 +7,56 @@
 @section('content')
 
 <!-- HERO -->
-<section class="relative bg-white min-h-screen pt-4 pb-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <!-- Kiri: Teks -->
-            <div class="pt-8 lg:pt-16">
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <span class="text-[11px] tracking-wide uppercase bg-brand/10 text-brand px-3 py-1.5 rounded-full font-semibold">Rental Mobil Terpercaya</span>
+<section class="relative bg-brand-dark overflow-hidden">
+    <!-- Latar foto armada menutupi sisi kanan. Gradien larut ke panel gelap di
+         kiri supaya teks tetap terbaca dan batas gambarnya tidak terlihat. -->
+    <div class="absolute inset-y-0 right-0 w-full lg:w-[58%] pointer-events-none" aria-hidden="true">
+        <img src="{{ asset('images/hero.jpg') }}"
+             alt=""
+             class="h-full w-full object-cover object-right opacity-45 lg:opacity-90">
+        <div class="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/80 to-brand-dark/20 lg:via-brand-dark/50 lg:to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-brand-dark/60 lg:hidden"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-5rem)] lg:min-h-[80vh] py-12 lg:py-16">
+            <!-- Teks -->
+            <div class="max-w-xl">
+                <div class="flex flex-wrap gap-2 mb-5">
+                    <span class="text-[11px] tracking-wide uppercase bg-white/10 text-brand-light px-3 py-1.5 rounded-full font-semibold">Rental Mobil Terpercaya</span>
                 </div>
 
-                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight text-brand-dark mb-2">
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight text-white mb-2">
                     Rental Mobil Berkualitas
                 </h1>
                 <p class="font-serif text-2xl sm:text-3xl lg:text-4xl italic text-brand-light">
                     dengan Harga Terjangkau
                 </p>
 
-                <p class="mt-6 text-brand-dark/60 text-base sm:text-lg max-w-xl leading-relaxed">
+                <p class="mt-5 text-white/60 text-base sm:text-lg max-w-xl leading-relaxed">
                     Pilihan mobil berkualitas dengan proses booking yang mudah di Jakarta, Bali, dan sekitarnya.
                 </p>
 
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ route('booking') }}" class="px-7 py-3.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-light transition-colors shadow-lg">
+                <div class="mt-7 flex flex-wrap gap-3">
+                    <a href="{{ route('booking') }}" class="px-7 py-3.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-light transition-colors shadow-lg shadow-black/30">
                         Booking Sekarang
                     </a>
-                    <a href="{{ route('services') }}" class="px-7 py-3.5 rounded-full border-2 border-brand text-brand text-sm font-semibold hover:bg-brand hover:text-white transition-colors">
+                    <a href="{{ route('services') }}" class="px-7 py-3.5 rounded-full border-2 border-white/25 text-white text-sm font-semibold hover:bg-white hover:text-brand-dark transition-colors">
                         Lihat Daftar Mobil →
                     </a>
                 </div>
 
-                <div class="mt-12 grid grid-cols-2 gap-6 text-sm">
+                <div class="mt-8 grid grid-cols-2 gap-6 text-sm">
                     <div>
-                        <p class="text-brand-dark font-semibold text-lg">Antar Jemput</p>
-                        <p class="text-brand-dark/60 text-sm mt-1">Layanan Antar Jemput</p>
+                        <p class="text-white font-semibold text-lg">Antar Jemput</p>
+                        <p class="text-white/50 text-sm mt-1">Layanan Antar Jemput</p>
                     </div>
                     <div>
-                        <p class="text-brand-dark font-semibold text-lg">{{ $unitCount }}+ Unit</p>
-                        <p class="text-brand-dark/60 text-sm mt-1">Mobil Siap Pakai</p>
+                        <p class="text-white font-semibold text-lg">{{ $unitCount }}+ Unit</p>
+                        <p class="text-white/50 text-sm mt-1">Mobil Siap Pakai</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Kanan: Gambar Mobil -->
-            @if($mobils->isNotEmpty())
-            <div class="hidden lg:flex items-center justify-center">
-                <img src="{{ $mobils->first()->gambar ? asset('storage/'.$mobils->first()->gambar) : 'https://placehold.co/600x400?text='.urlencode($mobils->first()->nama) }}"
-                     alt="{{ $mobils->first()->nama }}"
-                     class="w-full max-w-md object-contain drop-shadow-2xl">
-            </div>
-            @endif
         </div>
     </div>
 </section>
