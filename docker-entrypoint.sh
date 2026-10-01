@@ -3,6 +3,14 @@ set -e
 
 echo "Starting Russ Rental Laravel Application..."
 
+# Append KEY="value" to .env, escaping characters that dotenv would otherwise
+# interpret (double quotes, backslashes and dollar signs) or reject as invalid
+# whitespace. Unquoted values containing spaces make the whole file unparsable,
+# which breaks every subsequent artisan command.
+write_env() {
+    printf '%s="%s"\n' "$1" "$(printf '%s' "$2" | sed -e 's/[\\"]/\\&/g' -e 's/\$/\\$/g')" >> .env
+}
+
 # Railway/MySQL inject MYSQLHOST, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE.
 # Seed .env from those only when the matching DB_* variables are absent, so the
 # file never shadows real credentials with localhost placeholders.
@@ -10,34 +18,36 @@ if [ ! -f .env ]; then
     echo "Creating .env file from environment variables..."
     : > .env
 
-    echo "APP_NAME=${APP_NAME:-Russ Rental}" >> .env
-    echo "APP_ENV=${APP_ENV:-production}" >> .env
-    echo "APP_DEBUG=${APP_DEBUG:-false}" >> .env
-    echo "APP_URL=${APP_URL:-http://localhost}" >> .env
-    echo "APP_LOCALE=${APP_LOCALE:-id}" >> .env
-    echo "APP_FALLBACK_LOCALE=${APP_FALLBACK_LOCALE:-en}" >> .env
+    write_env APP_NAME "${APP_NAME:-Russ Rental}"
+    write_env APP_ENV "${APP_ENV:-production}"
+    write_env APP_DEBUG "${APP_DEBUG:-false}"
+    write_env APP_URL "${APP_URL:-http://localhost}"
+    write_env APP_LOCALE "${APP_LOCALE:-id}"
+    write_env APP_FALLBACK_LOCALE "${APP_FALLBACK_LOCALE:-en}"
 
-    echo "LOG_CHANNEL=${LOG_CHANNEL:-stack}" >> .env
-    echo "LOG_LEVEL=${LOG_LEVEL:-error}" >> .env
+    write_env LOG_CHANNEL "${LOG_CHANNEL:-stack}"
+    write_env LOG_LEVEL "${LOG_LEVEL:-error}"
 
-    echo "DB_CONNECTION=${DB_CONNECTION:-mysql}" >> .env
-    echo "DB_HOST=${DB_HOST:-${MYSQLHOST:-mysql}}" >> .env
-    echo "DB_PORT=${DB_PORT:-${MYSQLPORT:-3306}}" >> .env
-    echo "DB_DATABASE=${DB_DATABASE:-${MYSQLDATABASE:-railway}}" >> .env
-    echo "DB_USERNAME=${DB_USERNAME:-${MYSQLUSER:-root}}" >> .env
-    echo "DB_PASSWORD=${DB_PASSWORD:-${MYSQLPASSWORD:-}}" >> .env
+    write_env DB_CONNECTION "${DB_CONNECTION:-mysql}"
+    write_env DB_HOST "${DB_HOST:-${MYSQLHOST:-mysql}}"
+    write_env DB_PORT "${DB_PORT:-${MYSQLPORT:-3306}}"
+    write_env DB_DATABASE "${DB_DATABASE:-${MYSQLDATABASE:-railway}}"
+    write_env DB_USERNAME "${DB_USERNAME:-${MYSQLUSER:-root}}"
+    write_env DB_PASSWORD "${DB_PASSWORD:-${MYSQLPASSWORD:-}}"
 
-    echo "FILESYSTEM_DISK=${FILESYSTEM_DISK:-public}" >> .env
-    echo "SESSION_DRIVER=${SESSION_DRIVER:-database}" >> .env
-    echo "SESSION_LIFETIME=${SESSION_LIFETIME:-120}" >> .env
-    echo "QUEUE_CONNECTION=${QUEUE_CONNECTION:-database}" >> .env
-    echo "CACHE_STORE=${CACHE_STORE:-database}" >> .env
+    write_env FILESYSTEM_DISK "${FILESYSTEM_DISK:-public}"
+    write_env SESSION_DRIVER "${SESSION_DRIVER:-database}"
+    write_env SESSION_LIFETIME "${SESSION_LIFETIME:-120}"
+    write_env QUEUE_CONNECTION "${QUEUE_CONNECTION:-database}"
+    write_env CACHE_STORE "${CACHE_STORE:-database}"
 
-    echo "MAIL_MAILER=${MAIL_MAILER:-log}" >> .env
-    echo "MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS:-concierge@russrental.com}" >> .env
-    echo "MAIL_FROM_NAME=\"\${APP_NAME}\"" >> .env
+    write_env MAIL_MAILER "${MAIL_MAILER:-log}"
+    write_env MAIL_FROM_ADDRESS "${MAIL_FROM_ADDRESS:-concierge@russrental.com}"
+    write_env MAIL_FROM_NAME "${APP_NAME:-Russ Rental}"
+    write_env RUSS_RENTAL_WHATSAPP "${RUSS_RENTAL_WHATSAPP:-}"
 
-    echo "RUSS_RENTAL_WHATSAPP=\"\${RUSS_RENTAL_WHATSAPP:-}\"" >> .env
+    echo "Generated .env:"
+    sed -e 's/\(DB_PASSWORD=\).*/\1***/' -e 's/\(MYSQL[A-Z]*=\).*/\1***/' .env
 fi
 
 # Wait for database if needed
@@ -50,18 +60,18 @@ fi
 # reuse it so sessions and encrypted payloads survive redeploys.
 if [ -n "${APP_KEY:-}" ]; then
     echo "APP_KEY provided by environment, skipping generation."
-    grep -q "^APP_KEY=" .env 2>/dev/null || echo "APP_KEY=${APP_KEY}" >> .env
+    grep -q "^APP_KEY=" .env 2>/dev/null || write_env APP_KEY "${APP_KEY}"
 elif [ -f .env ] && grep -q "APP_KEY=base64:" .env; then
     echo "APP_KEY already present in .env, skipping generation."
 else
     echo "APP_KEY not set, generating..."
-    php artisan key:generate --force
+    php artisan key:generate --force || echo "WARNING: key:generate failed, continuing."
 fi
 
 # Run migrations if AUTO_MIGRATE is true. A migration failure must not take the
 # whole container down, otherwise Railway marks the service as crashed and the
 # console becomes unreachable for diagnosing the actual database error.
-if [ "$AUTO_MIGRATE" = "true" ]; then
+if [ "${AUTO_MIGRATE:-false}" = "true" ]; then
     echo "Running migrations..."
     if ! php artisan migrate --force --no-interaction; then
         echo "WARNING: migrations failed, continuing to boot the web server."
