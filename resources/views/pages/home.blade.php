@@ -19,25 +19,25 @@
     </div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-5rem)] lg:min-h-[80vh] py-12 lg:py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-5rem)] lg:min-h-[78vh] py-10 lg:py-12">
             <!-- Teks -->
             <div class="max-w-xl">
                 <div class="flex flex-wrap gap-2 mb-5">
                     <span class="text-[11px] tracking-wide uppercase bg-white/10 text-brand-light px-3 py-1.5 rounded-full font-semibold">Rental Mobil Terpercaya</span>
                 </div>
 
-                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight text-white mb-2">
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-5xl xl:text-6xl leading-tight text-white mb-2">
                     Rental Mobil Berkualitas
                 </h1>
-                <p class="font-serif text-2xl sm:text-3xl lg:text-4xl italic text-brand-light">
+                <p class="font-serif text-2xl sm:text-3xl lg:text-3xl xl:text-4xl italic text-brand-light">
                     dengan Harga Terjangkau
                 </p>
 
-                <p class="mt-5 text-white/60 text-base sm:text-lg max-w-xl leading-relaxed">
+                <p class="mt-4 text-white/60 text-base sm:text-lg max-w-xl leading-relaxed">
                     Pilihan mobil berkualitas dengan proses booking yang mudah di Jakarta, Bali, dan sekitarnya.
                 </p>
 
-                <div class="mt-7 flex flex-wrap gap-3">
+                <div class="mt-6 flex flex-wrap gap-3">
                     <a href="{{ route('booking') }}" class="px-7 py-3.5 rounded-full bg-brand text-white text-sm font-semibold hover:bg-brand-light transition-colors shadow-lg shadow-black/30">
                         Booking Sekarang
                     </a>
@@ -46,7 +46,7 @@
                     </a>
                 </div>
 
-                <div class="mt-8 grid grid-cols-2 gap-6 text-sm">
+                <div class="mt-7 grid grid-cols-2 gap-6 text-sm">
                     <div>
                         <p class="text-white font-semibold text-lg">Antar Jemput</p>
                         <p class="text-white/50 text-sm mt-1">Layanan Antar Jemput</p>
