@@ -2,6 +2,43 @@
 
 use Illuminate\Support\Str;
 
+/*
+|--------------------------------------------------------------------------
+| Unresolved Variable Placeholder Resolution
+|--------------------------------------------------------------------------
+|
+| Deployment platforms such as Railway inject credentials as MYSQLHOST,
+| MYSQLUSER, MYSQLPASSWORD and friends. Laravel's .env files support shell
+| style interpolation, but platform variables are never expanded when they
+| are copied verbatim into DB_* values, leaving literal "${MYSQLHOST}"
+| strings behind that cannot be resolved by DNS.
+|
+| The helper below picks the first usable value across a list of candidate
+| environment variables and discards unresolved "${...}" placeholders so a
+| missing or misconfigured DB_HOST degrades gracefully instead of fatally.
+|
+*/
+
+$resolveDbValue = static function (string $key, array $fallbacks, mixed $default = null): mixed {
+    $candidates = array_merge([$key], $fallbacks);
+
+    foreach ($candidates as $candidate) {
+        $value = env($candidate);
+
+        if ($value === null || $value === '') {
+            continue;
+        }
+
+        if (is_string($value) && preg_match('/^\$\{[^}]*\}$/', trim($value)) === 1) {
+            continue;
+        }
+
+        return $value;
+    }
+
+    return $default;
+};
+
 return [
 
     /*
@@ -45,12 +82,12 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'url' => $resolveDbValue('DB_URL', ['DATABASE_URL', 'MYSQL_URL']),
+            'host' => $resolveDbValue('DB_HOST', ['MYSQLHOST', 'MYSQL_HOST'], '127.0.0.1'),
+            'port' => $resolveDbValue('DB_PORT', ['MYSQLPORT', 'MYSQL_PORT'], '3306'),
+            'database' => $resolveDbValue('DB_DATABASE', ['MYSQLDATABASE', 'MYSQL_DATABASE'], 'laravel'),
+            'username' => $resolveDbValue('DB_USERNAME', ['MYSQLUSER', 'MYSQL_USER'], 'root'),
+            'password' => $resolveDbValue('DB_PASSWORD', ['MYSQLPASSWORD', 'MYSQL_PASSWORD', 'MYSQL_ROOT_PASSWORD'], ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
