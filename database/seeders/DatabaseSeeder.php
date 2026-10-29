@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             TipeSeeder::class,
             MobilSeeder::class,
             TeamMemberSeeder::class,
+            MobilGambarSeeder::class,
         ]);
     }
 }

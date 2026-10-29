@@ -78,6 +78,14 @@ if [ "${AUTO_MIGRATE:-false}" = "true" ]; then
     fi
 fi
 
+# Fill in car photos for rows that have none. Idempotent and cheap (only writes
+# rows whose gambar is still empty), so it runs on every boot without clobbering
+# images uploaded later through the admin panel.
+echo "Syncing car images..."
+if ! php artisan db:seed --class=MobilGambarSeeder --force --no-interaction; then
+    echo "WARNING: car image seed failed, continuing."
+fi
+
 # Cache configuration for performance. Caching is an optimisation, so a failure
 # here degrades performance instead of taking the service offline.
 echo "Caching configuration..."
