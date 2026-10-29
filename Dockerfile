@@ -31,6 +31,11 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
+# Publish Filament assets to public/. They are gitignored, and composer runs with
+# --no-scripts so filament:upgrade never runs during the build; without this step
+# every /admin asset (css/js/fonts) 404s in production.
+RUN php artisan filament:assets
+
 # Install Node dependencies and build assets
 RUN npm install && npm run build && rm -rf node_modules
 
